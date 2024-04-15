@@ -1,0 +1,16 @@
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  db: my_blog
+  user: root
+  password: qq74263827
+  log_level: develop # develop/test/production
+logger:
+  level: info
+  director: log
+  show_line: true
+  log_in_console: true
+system:
+  port: 8844
+  host: "0.0.0.0"
+  env: develop
