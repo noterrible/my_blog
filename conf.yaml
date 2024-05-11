@@ -1,16 +1,35 @@
 mysql:
   host: 127.0.0.1
   port: 3306
-  db: my_blog
+  db: my_blog_local
   user: root
   password: qq74263827
-  log_level: develop # develop/test/production
+  log_level: debug # debug/test/release
+#redis:
+#  host: 127.0.0.1
+#  port: 6379
+#  password: qq74263827
 logger:
+  path: log
   level: info
   director: log
   show_line: true
   log_in_console: true
+jwt:
+  secret: "my_blog_local"
+  expire: 86400
 system:
-  port: 8844
+  port: "8844"
   host: "0.0.0.0"
-  env: develop
+  env: debug  # gin_mode debug/test/release
+site_info:
+  create_at: "2024-05-11"
+  title: "My Blog"
+  job: "Golang后端开发"
+  addr: "杭州"
+  github: "https://github.com/noterrible"
+image:
+  path: "static/images/"
+  enable_origin: false
+  size: 15728640
+
