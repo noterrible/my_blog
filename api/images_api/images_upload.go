@@ -3,6 +3,7 @@ package images_api
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/segmentio/ksuid"
 	"my_blog/global"
 	"my_blog/response"
 	"strings"
@@ -10,17 +11,19 @@ import (
 
 type UploadReq struct {
 }
-type UploadResp struct {
-	FileName  string `json:"file_name"`
-	IsSuccess bool   `json:"is_success"`
-	Msg       string `json:"msg"`
-}
 
 var list = []string{
 	"png",
 	"jpg",
 	"gif",
 	"jpeg",
+}
+
+type UploadResp struct {
+	FileName  string `json:"file_name"`
+	IsSuccess bool   `json:"is_success"`
+	Https     string `json:"https"`
+	Msg       string `json:"msg"`
 }
 
 func Upload(c *gin.Context) {
@@ -36,7 +39,7 @@ func Upload(c *gin.Context) {
 	}
 	respL := make([]UploadResp, 0)
 	for _, header := range fileList {
-
+		header.Open()
 		//限制文件大小
 		if header.Size > global.Config.Image.Size {
 			respL = append(respL, UploadResp{
@@ -53,22 +56,40 @@ func Upload(c *gin.Context) {
 			})
 			continue
 		}
-		//保存到本地
-		err := c.SaveUploadedFile(header, global.Config.Image.Path+header.Filename)
+		ioReader, err := header.Open()
 		if err != nil {
 			respL = append(respL, UploadResp{
 				FileName:  header.Filename,
 				IsSuccess: false,
-				Msg:       "failed",
+				Msg:       "server error",
 			})
-			response.FailedWithMsg(c, err.Error())
-			return
+			continue
+		}
+		//
+		ID := ksuid.New()
+		var saveSuffix string
+		sp := strings.Split(header.Filename, ".")
+		if len(sp) > 0 {
+			saveSuffix = sp[len(sp)-1]
+		}
+		saveName := ID.String() + "." + saveSuffix
+		//保存到oss
+		err = global.Bucket.PutObject(saveName, ioReader)
+		if err != nil {
+			respL = append(respL, UploadResp{
+				FileName:  header.Filename,
+				IsSuccess: false,
+				Msg:       "server error :bucket",
+			})
+			continue
 		}
 		respL = append(respL, UploadResp{
 			FileName:  header.Filename,
 			IsSuccess: true,
+			Https:     global.Config.Image.GetDomain + saveName,
 			Msg:       "success",
 		})
+
 	}
 	response.OKWithData(c, respL)
 }

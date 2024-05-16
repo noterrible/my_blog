@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"my_blog/api/advertise_api"
 	"my_blog/api/images_api"
 	"my_blog/api/system_setting_api"
 	docs "my_blog/docs"
@@ -20,6 +21,7 @@ func InitRouter() *gin.Engine {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	system_setting_api.InitRouter(r)
 	images_api.InitRouter(r)
+	advertise_api.InitRouter(r)
 	return r
 }
 

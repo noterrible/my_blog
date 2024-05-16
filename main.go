@@ -10,6 +10,7 @@ func main() {
 	initialization.InitConfig("conf.yaml")
 	global.Log = initialization.InitLogger()
 	initialization.InitMysql()
+	initialization.InitBucket()
 	r := routers.InitRouter()
 	global.Log.Infof("run: %s", global.Config.System.Addr())
 	err := r.Run(global.Config.System.Addr())

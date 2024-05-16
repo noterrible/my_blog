@@ -1,10 +1,11 @@
 mysql:
   host: 127.0.0.1
   port: 3306
+  config: "charset=utf8mb4&parseTime=True&loc=Local"
   db: my_blog_local
   user: root
   password: qq74263827
-  log_level: debug # debug/test/release
+  log_level: test # debug/test/release
 #redis:
 #  host: 127.0.0.1
 #  port: 6379
@@ -28,8 +29,13 @@ site_info:
   job: "Golang后端开发"
   addr: "杭州"
   github: "https://github.com/noterrible"
-image:
-  path: "static/images/"
-  enable_origin: false
-  size: 15728640
+image: #图片设置
+#  path: "static/images/"
+#  enable_origin: false
+  size: 15728640 #限制图片大小 15M
+  upload_domain: "https://oss-cn-beijing.aliyuncs.com/"
+  get_domain: "https://my-blog001.oss-cn-beijing.aliyuncs.com/"
+  bucket_name: "my-blog001"
+  access_key_id: "LTAI5tGmY2EGftfdmErQVRzE"
+  access_key_secret: "GPJv7Hxdwru1jXyXhARzhzQiYGzeyC"
 

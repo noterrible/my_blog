@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"my_blog/global"
+	"my_blog/models"
 	"time"
 )
 
@@ -38,4 +39,8 @@ func InitMysql() {
 	myDB.SetMaxOpenConns(100)              //最多可打开连接数
 	myDB.SetConnMaxLifetime(4 * time.Hour) //打开的连接的持续时长
 	global.DB = db
+	err = global.DB.AutoMigrate(models.Advertise{}, models.User{})
+	if err != nil {
+		global.Log.Error(err)
+	}
 }
